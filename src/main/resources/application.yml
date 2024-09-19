@@ -1,0 +1,26 @@
+server:
+  port: 8088
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  mvc:
+    pathmatch:
+      matching-strategy: path-pattern-parser
+  datasource:
+    url: jdbc:mariadb://localhost:3306/ShopApp
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: root
+    password:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+      dialect: org.hibernate.dialect.MysqlDialect
+    properties:
+      hibernate:
+        format_sql: true
+#
+#api:
+#  prefix: api/v1
