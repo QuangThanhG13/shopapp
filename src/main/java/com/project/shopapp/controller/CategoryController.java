@@ -43,7 +43,6 @@ public class CategoryController {
         return ResponseEntity.ok("Insert category thành công: " + newCategory);
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<String> updateCategory(@PathVariable Long id) {
         return ResponseEntity.ok("update category thanh cong");

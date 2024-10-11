@@ -66,7 +66,51 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public Order updateOrder(Long orderId, OrderDTO orderDTO) {
+    public List<Order> findByUserId(Long orderId) {
+        return orderRepository.findByUserId(orderId);
+    }
+
+    @Override
+    public Order updateOrder(Long orderId, OrderDTO orderDTO) throws DataNotFoundException {
+        Order optionalOrder = orderRepository.findById(orderId)
+                .orElseThrow(() -> new DataNotFoundException("Can not find order with id " + orderId));
+        Order existingOrder = optionalOrder;
+        // C1 : Khong dung thu vien set tay
+        if (existingOrder != null) {
+            //kiem tra xem user'id co ton tai khong
+            User existingUser = userRepository.findById(orderDTO.getUserId())
+                    .orElseThrow(() -> new DataNotFoundException("User not found"));
+            // Cap nhap cac truong tu order
+            existingOrder.setFullName(orderDTO.getFullName());
+            existingOrder.setPhoneNumber(orderDTO.getPhoneNumber());
+            existingOrder.setAddress(orderDTO.getAddress());
+            existingOrder.setNote(orderDTO.getNote());
+            existingOrder.setOrderDate(new Date());
+            existingOrder.setStatus(OrderStatus.PROCESSING);
+            existingOrder.setTotalMoney(orderDTO.getTotalMoney());
+            existingOrder.setShippingMethod(orderDTO.getShippingMethod());
+            existingOrder.setShippingAddress(orderDTO.getShippingAddress());
+            existingOrder.setShippingDate(orderDTO.getShippingDate());
+//            existingOrder.setTrackingNumber(orderDTO.getTrackingNumber());
+            existingOrder.setPaymentMethod(orderDTO.getPaymentMethod());
+            existingOrder.setActive(true);
+            existingOrder.setUser(existingUser);
+            return orderRepository.save(existingOrder);
+        }
+
+        //C2: su dung model mapper
+//        if (existingOrder != null) {
+//            // Convert Dto sang Entity(OrderDTO --> Order)
+//            // Dung thu vien Model Mapped
+//            // Tao 1 luong bang anh xa rieng de anh xa :
+//            modelMapper.typeMap(OrderDTO.class, Order.class)
+//                    .addMappings(mapper -> mapper.skip(Order::setId));
+//            // Cap nhap cac truong tu order
+//            Order order = new Order();
+//            modelMapper.map(orderDTO, order);
+//            // luu vao csdl
+//            return orderRepository.save(order);
+//        }
         return null;
     }
 
@@ -97,9 +141,14 @@ public class OrderService implements IOrderService {
 
     @Override
     public void deleteOrder(Long orderId) {
-        orderRepository.deleteById(orderId);
-    }
+        Order order = orderRepository.findById(orderId).orElse(null);
 
+        if (order != null) {
+            order.setActive(false);
+            orderRepository.save(order);
+//            orderRepository.deleteById(orderId);
+        }
+    }
     @Override
     public List<Order> findAllOrders(Long userId) {
 //        List<Order> orders = orderRepository.findByUserId(userId);

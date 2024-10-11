@@ -12,9 +12,11 @@ import java.util.List;
 public interface IOrderService {
     OrderResponse createOrder(OrderDTO orderDTO) throws DataNotFoundException;
     Order getOrderById(Long orderId);
-    Order updateOrder(Long orderId, OrderDTO orderDTO);
+    List<Order> findByUserId(Long userId);
+    Order updateOrder(Long orderId, OrderDTO orderDTO) throws DataNotFoundException;
     void deleteOrder(Long orderId);
     List<Order> findAllOrders(Long userId);
+
 
 
 //    Page<Order> getOrderbyKeyWord(String keyWord, Pageable pageable);

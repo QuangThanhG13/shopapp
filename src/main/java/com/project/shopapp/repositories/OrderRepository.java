@@ -9,9 +9,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-//    List<Order> findByUserId (Long userId);
+
+    List<Order> findByUserId (Long userId);
 
 //    @Query("SELECT o FROM Order o WHERE o.active = true AND (:keyword IS NULL OR :keyword = '' OR " +
 //            "o.fullName LIKE %:keyword% " +
